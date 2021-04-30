@@ -1,25 +1,17 @@
 # Add your Python code here. E.g.
 from microbit import *
  
-def write_led_code(input_code, dire = 'x', base = '', rev = False):
+def write_led_code(input_code, dire = 'x', rev = False):
     code = ''.join(reversed(input_code)) if rev else input_code 
     
     final_string = ''
     for i_row in range(5):
         line = ''
         for i_col in range(5):
-            olds = None
-            a = i_row
-            b = i_col
+            news = code[i_col]
             if dire == 'y':
-                a = i_col
-                b = i_row
-            news = code[b]
-
-            if base != '':
-                olds = base[(b * 5 + b ** 1) + a]
-                if code[b] == '0':
-                    news = olds
+                news = code[i_row]
+                
             line += news
 
         line += ':'
@@ -53,5 +45,9 @@ def calc_value(val, typ = 'x'):
 while True:
     acc_x = accelerometer.get_x()
     acc_y = accelerometer.get_y()
-    data = calc_value(acc_y, 'y')
+    if abs(acc_x) >= 90:
+        data = calc_value(acc_x, 'x')
+    elif abs(acc_y) >= 90:
+        data = calc_value(acc_y, 'y')
+        
     display.show(Image(data))
